@@ -1,0 +1,15 @@
+.image-icon{
+    height:200px;
+    width:200px;
+    border-radius: 30%;
+    position: absolute;
+    right:0;
+    bottom: 0;
+}
+
+#img-container{
+    height: 250px;
+    width: 250px;
+    position: relative;
+    
+}
