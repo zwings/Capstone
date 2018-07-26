@@ -6,20 +6,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/contentful@latest/dist/contentful.browser.min.js"></script>
-
 </head>
 
 <body>
-    <template id="items-template">
-        <div class="items-template-img">hi</div>
-    </template>
-
-    <div id="items-container" class="row">
-
+    <!--A template for birds icons-->
+    <div id="icons-template" style="display:none;">
+        <div id="img-container" class="grid-row col-md-6 col-lg-3">
+            <img class="icons-template-img">
+        </div>
+    </div>
+    <!--A div to contain the data from Contenful-->
+    <div id="icons-container" class="row">
     </div>
 
-
     <script type='text/javascript'>
+        // Set up api call.
         let cdaClient = contentful.createClient({
             space: "bqnchs7z0iy5",
             accessToken: "c0685fb14294207d1308e272df9fe0da5d6651c2efec7a4ee2c519f310ddb1d2"
@@ -30,58 +31,40 @@
         cdaClient.getEntries({ content_type: "birdType" })
             .then((result) => result.items)
             .then((items) => items.map((item) => item.fields))
-            // .then((items) =>items.forEach((item)=>            ))
             .then((output) => output.map((item) => {
                 return { ...item, photo: item.photo.fields.file.url }
             }))
-            .then(output => { birdsArr = output; return output })
+            .then((items) => items.forEach((item) => {
+                birdsArr.push({ ...item, id: birdsArr.length })
+            }))
             .then(constructData)
-        // .then(console.log);
-
-
-        function constructData(data) {
-            let content = "";
-
-            data.forEach((e) => {
-                content += `<div id="img-container" class="grid-row col-md-6 col-lg-3">`;
-                content += `    <img class="image-icon" src="http:${e.photo}">`;
-                content += '</div>';
-            });
-
-            console.log(content);
-
-            document.getElementById('items-container').innerHTML += content;
-
-            content = "";
-
-
+            .then(console.log);
+        // Append the data retrived from Contentful to HTML. 
+        function constructData() {
+            birdsArr.forEach((e) => {
+                let iconTemplate = $('#icons-template').clone();
+                let iconContainer = iconTemplate[0].children;
+                iconContainer[0].innerHTML = `<img class="icons-template-img" src="http:${e.photo}">`
+                let iconsContainer = $("#icons-container");
+                iconsContainer.append(iconTemplate.html());
+            })
         }
-
-
-
-
-        // function rendering(data) {
-        //     data.forEach((e) => {
-
-        //         console.log(e);
-
-        //         let template = $("#items-template").clone();
-
-
-
-        //         // template.children('.items-template-img')[0].innerHTML="goodbye!";
-
-        //         console.log(template.children('.items-template-img'));
-
-        //         template.removeAttr('id');
-
-        //         template.show();
-
-        //         $('#items-container').append(template);
-        //     })
-        // }
-
     </script>
 </body>
+<!--  A hard code method to constructData
+function constructData() {
+    let content = "";
 
+    birdsArr.forEach((e) => {
+        content += `<div id="img-container" class="grid-row col-md-6 col-lg-3">`;
+        content += `    <img class="image-icon" src="http:${e.photo}">`;
+        content += '</div>';
+    });
+
+    console.log(content);
+
+    document.getElementById('items-container').innerHTML += content;
+
+    content = "";
+} -->
 </html>
