@@ -1,7 +1,10 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+        crossorigin="anonymous">
     <link rel="stylesheet" href="./Shop_page.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -9,41 +12,83 @@
 </head>
 
 <body>
-    <!--template for bird icons-->
+    <!-- Bird icons template-->
     <div id="birds-icons-template" style="display:none;">
         <div class="img-container grid-row col-md-6 col-lg-3">
             <img class="birds-icons-img-template">
         </div>
     </div>
-
-    <!-- bird data card modal template-->
+    <!-- Bird data card modal template-->
     <div style="display: none;">
-        <div id="bird-data-card-template" class="modal-dialog">
-            <!-- bird-data-card content-->
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <img class="modal-image" src="background:url('')">
+        <div id="bird-data-template" class="modal-dialog">
+            <!-- bird-dta-card content-->
+            <!--Warning never mess up with the fucking bootstrap class!!!!-->
+            <div class="bird-data-modal-content modal-content">
+                <div class="bird-data-modal-header modal-header">
+                    <span type="button" class="close" data-dismiss="modal">&times;</span>
+                    <div class="bird-data-type">Lovebird</div>
                 </div>
-                <div class="modal-footer">
-                    <div class="type">Lovebird</div>
-                    <div class="descripiton">
-                        <p class="properties">Lovebird is a small size bird, with green color feather, and it's 2 years old now.</p>
-                        <p class="price">Price:$100</p>
+                <div class="bird-data-modal-body modal-body">   
+                    <img class="bird-data-modal-image" src="background:url('')">
+                </div>
+                <div class="bird-data-modal-footer modal-footer">
+                    <div class="bird-data-descripiton">
+                        <p class="bird-data-properties">Lovebird is a small size bird, with green color feather, and it's 2 years old now.</p>
+                        <span>
+                        <i class="fas fa-tag fa-2x"></i>
+                        <span class="bird-data-price">Price:$100</span>
+                        </span>
+                        <br/>
+                        <button class="bird-data-add-to-cart">
+                            <span>
+                                <i class="fas fa-cart-plus fa-2x"></i>
+                                <span class="bird-data-add-to-cart-text">Add to Cart</span>
+                            </span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div id="birds-icons-container" class="row">
+    <!-- Shopping cart modal template -->
+    <div style="display: none;">
+        <div id="shopping-cart-template" class="modal-dialog">
+            s<!-- Shopping cart modal content-->
+            <div class="shopping-cart-modal-content modal-content">
+                <div class="shopping-cart-modal-header modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        <i class="fas fa-crow fa-2x"></i>
+                        <span>Shopping cart</span
+                    ></h4>
+                </div>
+                <div class="shopping-cart-modal-body modal-body">
+                    <ul>
+                        <li>"You haven't added any item yet"</li>
+                    </ul>
+                        
+                    
+                </div>
+                <div class=" shopping-cart-modal-footer modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Check out</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+    
+        </div>
     </div>
 
-    <div id="bird-data-card" class="modal fade" role="dialog">
+    <!--Bird icons container-->
+    <div id="birds-icons-container" class="row">
+    </div>
+    <!--Bird data modal container-->
+    <div id="bird-data-container" class="modal fade" role="dialog">
+    </div>
+    <!--Shopping cart modal container-->
+    <div id="shopping-cart-container" class="modal fade" role="dialog">
     </div>
 
     <script type='text/javascript'>
-
         $().ready(()=>{
         // Set up api call.
         let cdaClient = contentful.createClient({
@@ -62,8 +107,7 @@
                 birdsArr.push({ ...item, id: birdsArr.length })
             }))
             .then(constructIcon)
-            .then(getBirdDataViaUrl)
-            
+            .then(getBirdDataViaUrl);
         // Append the data retrived from Contentful to HTML. 
         function constructIcon() {
             birdsArr.forEach((e) => {
@@ -74,19 +118,20 @@
                 iconsContainer.append(iconTemplate.html());
             });
         }
-
         // Event handler
         $("#birds-icons-container").click(".icons-img", function (e) {
             console.log(e.target.id);
             constructBirdData(e.target.id);
         });
-
-        $("#bird-data-card").on('hidden.bs.modal', function (e) {
+        // For new element generated after the page loaded, you have to select its parent for adding event handler
+        $("#bird-data-container").on('hidden.bs.modal', function (e) {
             e.target.innerHTML = "";
-        })
-        // 
+        });
+        $('#bird-data-container').click('.add-to-cart',function(e){
+            console.log('added');
+            console.log(e.target.id);
+        });
         
-
         // Get corresponding Bird ID from URL
         function getParameterByName(name, url) {
             if (!url) url = window.location.href;
@@ -109,43 +154,46 @@
        
         function constructBirdData(targetId) {
             data = birdsArr[Number(targetId)];
+            // console.log(data);
 
-            console.log(data);
+            let dataTemplate = $("#bird-data-template").clone();
+            // console.log(dataTemplate);
 
-            let dataTemplate = $("#bird-data-card-template").clone();
+            let dataHeader = dataTemplate[0].getElementsByClassName("bird-data-modal-header")[0];
+            // console.log(dataHeader);
 
-            console.log(dataTemplate);
-
-            let dataBody = dataTemplate[0].getElementsByClassName("modal-body")[0];
-
-            console.log(dataBody);
-
-            let image = dataBody.children[1];
-            image.src = `http:${data.photo}`;
-            console.log(image);
-            
-            let dataFooter = dataTemplate[0].getElementsByClassName("modal-footer")[0];
-            console.log(dataFooter);
-
-            let type = dataFooter.children[0];
+            let type = dataHeader.children[1];
             type.innerHTML = `${data.type}`;
-            console.log(type);
-            
+            // console.log(type);
 
-            let descripiton = dataFooter.children[1];
+            let dataBody = dataTemplate[0].getElementsByClassName("bird-data-modal-body")[0];
+            // console.log(dataBody);
+
+            let image = dataBody.children[0];
+            image.src = `http:${data.photo}`;
+            // console.log(image);
+            
+            let dataFooter = dataTemplate[0].getElementsByClassName("bird-data-modal-footer")[0];
+            // console.log(dataFooter);
+
+            let descripiton = dataFooter.children[0];
             console.log(descripiton);
 
             let properties = descripiton.children[0];
-            let price = descripiton.children[1];
+            let price = descripiton.children[1].children[1];
             properties.innerHTML = `${data.type} is a ${data.size} size bird, with ${data.color} color feather, and it's ${data.age} years old now.`;
-            price.innerHTML = `$${data.price}`;
+            price.innerHTML = `$${data.price}`; 
+            let button = descripiton.children[3];
+            button.id = data.id;
+            console.log(`I am id ${button.id}`);
 
-            console.log(properties);
-            console.log(price);
+        
+            // console.log(properties);
+            // console.log(price);
 
-            let dataContainer = $("#bird-data-card");
+            let dataContainer = $("#bird-data-container");
             dataContainer.append(dataTemplate.html());
-            $('#bird-data-card').modal('show');
+            $('#bird-data-container').modal('show');
         };
 
         });

@@ -14,21 +14,59 @@
     overflow: hidden;
 }
 
-.modal-body{
-    padding:0px;
-    width: 402px;
+.close{
+    margin-right: 3px;
 }
 
-.modal-content{
-    width: 402px;
+/* .modal-backdrop{
+    width:100vh;
+}
+#bird-data-card{
+    width:100vh;
+    
+} */
+.bird-data-modal-body{
+    padding:0px;
+    width: 80vw;
+}
+
+.bird-data-modal-content{
+    width: 80vw;
     margin-left: auto;
     margin-right: auto;
 }
 
-.modal-image{
-    width:400px;
+.bird-data-modal-image{
+    width:79.8vw;
+    
 }
 
-.modal-footer{
-    width: 402px;
+.bird-data-modal-footer{
+    width: 80vw;
+    
 }
+
+div.bird-data-type{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 40;
+}
+
+p.bird-data-properties{
+    text-align: left;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 24;
+    padding:0 10px ;
+}
+
+span.bird-data-price{
+    /* font-family: 'Times New Roman', Times, serif; */
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size:30;
+}
+
+span.bird-data-add-to-cart-text{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size:30;
+}
+
