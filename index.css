@@ -93,9 +93,10 @@
     text-transform: uppercase;
     font-family: 'Times New Roman', Times, serif;
     color: azure;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     padding-left: 15px;
+    padding-right: 100px;
 }
 
 .header-content {
@@ -113,15 +114,38 @@
     font-size: 70px;
     position: relative;
     padding-top: 140px;
+    padding-left: 40px;
 }
 
 .text {
     font-size: 22px;
     position: relative;
-    padding-right: 35px;
+    padding-right: 55px;
+    padding-left: 35px;
+}
+
+.gallery {
+    height:485px;
 }
 
 .gallery img {
     float:right;
     
 }
+
+.banner {
+    background-image:url(./html-materials/52450555.jpg);
+    height: 65%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size:100%;
+    background-position: bottom;
+    font-size: 70px;
+    width:auto;
+    color:white;
+    font-family: 'Times New Roman', Times, serif;
+    padding-left:40px;
+    padding-top:60px;
+ 
+}
+
