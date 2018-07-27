@@ -1,0 +1,158 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./Shop_page.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/contentful@latest/dist/contentful.browser.min.js"></script>
+</head>
+
+<body>
+    <!--template for bird icons-->
+    <div id="birds-icons-template" style="display:none;">
+        <div class="img-container grid-row col-md-6 col-lg-3">
+            <img class="birds-icons-img-template">
+        </div>
+    </div>
+
+    <!-- bird data card modal template-->
+    <div style="display: none;">
+        <div id="bird-data-card-template" class="modal-dialog">
+            <!-- bird-data-card content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <img class="modal-image" src="background:url('')">
+                </div>
+                <div class="modal-footer">
+                    <div class="type">Lovebird</div>
+                    <div class="descripiton">
+                        <p class="properties">Lovebird is a small size bird, with green color feather, and it's 2 years old now.</p>
+                        <p class="price">Price:$100</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="birds-icons-container" class="row">
+    </div>
+
+    <div id="bird-data-card" class="modal fade" role="dialog">
+    </div>
+
+    <script type='text/javascript'>
+
+        $().ready(()=>{
+        // Set up api call.
+        let cdaClient = contentful.createClient({
+            space: "bqnchs7z0iy5",
+            accessToken: "c0685fb14294207d1308e272df9fe0da5d6651c2efec7a4ee2c519f310ddb1d2"
+        });
+        var birdsArr = [];
+        // Get all the entires of content-type from server.
+        cdaClient.getEntries({ content_type: "birdType" })
+            .then((result) => result.items)
+            .then((items) => items.map((item) => item.fields))
+            .then((output) => output.map((item) => {
+                return { ...item, photo: item.photo.fields.file.url }
+            }))
+            .then((items) => items.forEach((item) => {
+                birdsArr.push({ ...item, id: birdsArr.length })
+            }))
+            .then(constructIcon)
+            .then(getBirdDataViaUrl)
+            
+        // Append the data retrived from Contentful to HTML. 
+        function constructIcon() {
+            birdsArr.forEach((e) => {
+                let iconTemplate = $('#birds-icons-template').clone();
+                let iconContainer = iconTemplate[0].children;
+                iconContainer[0].innerHTML = `<img id="${e.id}"class="birds-icons-img" src="http:${e.photo}">`;
+                let iconsContainer = $("#birds-icons-container");
+                iconsContainer.append(iconTemplate.html());
+            });
+        }
+
+        // Event handler
+        $("#birds-icons-container").click(".icons-img", function (e) {
+            console.log(e.target.id);
+            constructBirdData(e.target.id);
+        });
+
+        $("#bird-data-card").on('hidden.bs.modal', function (e) {
+            e.target.innerHTML = "";
+        })
+        // 
+        
+
+        // Get corresponding Bird ID from URL
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Create a sudo event to trigger modal via URL
+        function getBirdDataViaUrl () {
+            console.log("I'm running")
+            var birdId = getParameterByName('birdId');
+            if (!!birdId){
+                $("#birds-icons-container").children().eq(Number(birdId)).children().eq(0).click()
+                }
+        };
+       
+        function constructBirdData(targetId) {
+            data = birdsArr[Number(targetId)];
+
+            console.log(data);
+
+            let dataTemplate = $("#bird-data-card-template").clone();
+
+            console.log(dataTemplate);
+
+            let dataBody = dataTemplate[0].getElementsByClassName("modal-body")[0];
+
+            console.log(dataBody);
+
+            let image = dataBody.children[1];
+            image.src = `http:${data.photo}`;
+            console.log(image);
+            
+            let dataFooter = dataTemplate[0].getElementsByClassName("modal-footer")[0];
+            console.log(dataFooter);
+
+            let type = dataFooter.children[0];
+            type.innerHTML = `${data.type}`;
+            console.log(type);
+            
+
+            let descripiton = dataFooter.children[1];
+            console.log(descripiton);
+
+            let properties = descripiton.children[0];
+            let price = descripiton.children[1];
+            properties.innerHTML = `${data.type} is a ${data.size} size bird, with ${data.color} color feather, and it's ${data.age} years old now.`;
+            price.innerHTML = `$${data.price}`;
+
+            console.log(properties);
+            console.log(price);
+
+            let dataContainer = $("#bird-data-card");
+            dataContainer.append(dataTemplate.html());
+            $('#bird-data-card').modal('show');
+        };
+
+        });
+
+
+    </script>
+</body>
+
+
+</html>
