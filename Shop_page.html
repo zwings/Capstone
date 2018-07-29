@@ -89,15 +89,15 @@
     <div style="display: none;">
         <div class="shopping-cart-list-item-template">
             <span class="shopping-cart-list-item-body">
-            <img class="shopping-cart-list-item-icon" scr="">
-            <span class="shopping-cart-list-item-name"></span>
-            <span class="shopping-cart-list-item-price"></span>
-            <!--I need to add a event hanlder and funcinton for remove button-->
-            <i class="shopping-cart-list-item-remove-button fas fa-minus-square"></i>
+                <img class="shopping-cart-list-item-icon" scr="">
+                <span class="shopping-cart-list-item-name"></span>
+                <span class="shopping-cart-list-item-price"></span>
+                <!--I need to add a event hanlder and funcinton for remove button-->
+                <i class="shopping-cart-list-item-remove-button fas fa-minus-square"></i>
             </span>
         </div>
     </div>
-    
+
     <!--Shopping cart button-->
     <i class="icon fas fa-shopping-cart fa-3x " data-toggle="modal" data-target="#shopping-cart-container"></i>
     <!--Bird icons container-->
@@ -141,13 +141,13 @@
                 // Get all the entires of content-type from server.
                 cdaClient.getEntries({ content_type: "birdType" })
                     .then((result) => result.items)
-                    .then((result) => {console.log(result);return result})
+                    .then((result) => { console.log(result); return result })
                     .then((items) => items.map((item) => item.fields))
                     .then((output) => output.map((item) => {
                         return { ...item, photo: item.photo.fields.file.url }
                     }))
                     .then((output) => output.map((item) => {
-                        return {...item, icon: item.icon.fields.file.url}
+                        return { ...item, icon: item.icon.fields.file.url }
                     }))
                     .then((items) => items.forEach((item) => {
                         birdsArr.push({ ...item, id: birdsArr.length })
@@ -165,17 +165,17 @@
                     e.target.innerHTML = "";
                 });
                 // Click add-to-cart button 
-                $('#bird-data-container').on('click','.bird-data-add-to-cart', function (e) {
+                $('#bird-data-container').on('click', '.bird-data-add-to-cart', function (e) {
                     console.log('added');
                     console.log(e.target.id);
                     constructShoppingCartItem(e.target.id);
                 });
                 //Click remove button
-                $('#shopping-cart-container').on('click','.shopping-cart-list-item-remove-button',function(e){
+                $('#shopping-cart-container').on('click', '.shopping-cart-list-item-remove-button', function (e) {
                     $(e.target).parent().remove();
                     console.log(document.getElementsByClassName('shopping-cart-list')[0].children.length)
-                    if (document.getElementsByClassName('shopping-cart-list')[0].children.length === 1){
-                        $(".shopping-cart-list-item-none").css('display','block');
+                    if (document.getElementsByClassName('shopping-cart-list')[0].children.length === 1) {
+                        $(".shopping-cart-list-item-none").css('display', 'block');
                     }
                 })
                 // Get corresponding Bird ID from URL
@@ -201,13 +201,14 @@
                     birdsArr.forEach((e) => {
                         let iconTemplate = $('#birds-icons-template').clone();
                         let iconContainer = iconTemplate[0].children;
-                        iconContainer[0].innerHTML = `<img id="${e.id}"class="birds-icons-img" src="http:${e.icon}">`;
+                        iconContainer[0].innerHTML = `<img id="img_${e.id}"class="birds-icons-img" src="http:${e.icon}">`;
                         let iconsContainer = $("#birds-icons-container");
                         iconsContainer.append(iconTemplate.html());
                     });
                 }
                 // Create a modal by API data
-                function constructBirdData(targetId) {
+                function constructBirdData(rawTargetId) {
+                    targetId = rawTargetId.substring(4);
                     data = birdsArr[Number(targetId)];
                     let dataTemplate = $("#bird-data-template").clone();
                     let dataHeader = dataTemplate[0].getElementsByClassName("bird-data-modal-header")[0];
@@ -223,18 +224,20 @@
                     properties.innerHTML = `${data.type} is a ${data.size} size bird, with ${data.color} color feather, and it's ${data.age} years old now.`;
                     price.innerHTML = `$${data.price}`;
                     let button = descripiton.children[3];
-                    button.id = data.id;
+                    button.id = `button_${data.id}`;
                     console.log(`I am id ${button.id}`);
                     let dataContainer = $("#bird-data-container");
                     dataContainer.append(dataTemplate.html());
                     $('#bird-data-container').modal('show');
                 };
                 // Create a item by API data
-                function constructShoppingCartItem(targetId){
+                function constructShoppingCartItem(rawTargetId) {
+                    targetId = rawTargetId.substring(7);
+                    console.log(targetId);
                     item = birdsArr[Number(targetId)];
-                    
                     let itemTemplate = $(".shopping-cart-list-item-template").clone();
                     let itemBody = itemTemplate[0].getElementsByClassName("shopping-cart-list-item-body")[0];
+                    itemBody.id = `item_${targetId}`
                     let itemIcon = itemBody.children[0];
                     let itemName = itemBody.children[1];
                     let itemPrice = itemBody.children[2];
@@ -242,9 +245,33 @@
                     itemName.innerHTML = `Type: ${item.type}`;
                     itemPrice.innerHTML = `Price: $${item.price}`;
                     let itemsContainer = $(".shopping-cart-list");
-                    $(".shopping-cart-list-item-none").css('display','none');
-                    itemsContainer.append(itemTemplate.html());
+
+
+                    if (checkDuplicate(itemBody.id)) {
+                        alert("Item already added to cart!")
+                    } else {
+
+                        $(".shopping-cart-list-item-none").css('display', 'none');
+                        itemsContainer.append(itemTemplate.html());
+                    }
                 }
+
+                function checkDuplicate(itemId) {
+                    let itemsContainer = $(".shopping-cart-list");
+                    checkingArr = itemsContainer[0].children;
+                    console.log((Array.from(checkingArr).map(function (e) {
+                        return e.id;
+                    }).filter((id) => {
+                        return id === itemId
+                    }).length > 0)
+                    );
+                    return (Array.from(checkingArr).map(function (e) {
+                        return e.id;
+                    }).filter((id) => {
+                        return id === itemId
+                    }).length > 0)
+                }
+
             });
         </script>
 </body>
