@@ -1,3 +1,79 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+.search {
+  float:left;
+  position: relative;
+  padding-top:35px;
+}
+
+.searchTerm {
+  width: 350px;
+  padding-top: 5px;
+  padding-right: 5px;
+  height: 40px;
+  border-radius: 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+.searchTerm:focus{
+  color: #00B4CC;
+}
+
+.searchButton img {
+    margin-right:60px;
+}
+
+.searchButton {
+  position: relative;  
+  right: -10px;
+  top: -7.5px;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border-radius: 35px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+
+.navbar-header {
+    float:left;
+    font-size: 65px;
+    text-transform: uppercase;
+    font-family: 'Times New Roman', Times, serif;
+    margin-top: 11px;
+    padding-left:25px;
+    color:black;
+}
+
+.threeIcon  {
+    float: right;
+    
+}
+.socialmedia > li {
+    float: left;
+    display:block; 
+    
+}
+
+.fb img{
+    margin-top: 20px;
+    margin-right: 45px;
+}
+.yt img{
+    margin-top: 25px;
+    margin-right: 30px;
+}
+.ig img{
+    margin-right: 10px;
+    margin-top: 8px;
+}
+
+.container-fluid img {
+    margin-top: 8px;
+}
+
 .img-container img{
     height:200px;
     width:200px;
@@ -27,22 +103,22 @@
 } */
 .bird-data-modal-body{
     padding:0px;
-    width: 60vw;
+    width: 46vw;
 }
 
 .bird-data-modal-content{
-    width: 60vw;
+    width: 46vw;
     margin-left: auto;
     margin-right: auto;
 }
 
 .bird-data-modal-image{
-    width:59.8vw;
+    width:45.9vw;
     
 }
 
 .bird-data-modal-footer{
-    width: 60vw;
+    width: 46vw;
     
 }
 
