@@ -98,8 +98,6 @@
         </div>
     </div>
 
-    <!--Shopping cart button-->
-    <i class="icon fas fa-shopping-cart fa-3x " data-toggle="modal" data-target="#shopping-cart-container"></i>
     <!--Bird icons container-->
     <div id="birds-icons-container" class="row">
     </div>
@@ -129,6 +127,75 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!--Question box modal-->
+    <div id="questionBox" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Question box content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Question</h4>
+                </div>
+                <div class="modal-body">
+                    <p>If you have any enquiry feel free to leave your message to us</p>
+                    <input type="text" class="auto" id="email" name="email" placeholder="Your email">
+                    <br/>
+                    <br/>
+                    <input type="text" class="auto" id="message" name="message" placeholder="Your message">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="submit">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- submitted modal -->
+    <div id="submitted" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+        <!-- submitted modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Success</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Your message is submitted!</p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+    </div>
+    <!-- Floating button -->
+        <!-- Menu button -->
+        <a class="float pointer" id="menu-share">
+                <i class="icon fas fa-bars fa-3x"></i>
+            </a>
+            <ul id=buttonInMenu>
+                <li>
+                    <!-- Scroll top button -->
+                    <a class=pointer>
+                        <i class="icon fas fa-chevron-up fa-3x"></i>
+                    </a>
+                </li>
+                <!--Shopping cart button-->
+                <li>
+                    <a class=pointer>
+                        <i class="icon fas fa-shopping-cart fa-3x " data-toggle="modal" data-target="#shopping-cart-container"></i>
+                    </a>
+                </li>
+                <!--Question button-->
+                <li>
+                    <a class=pointer>
+                        <i class="icon fas fa-question fa-3x" data-toggle="modal" data-target="#questionBox"></i>
+                    </a>
+                </li>
+            </ul>
+
+        
 
         <script type='text/javascript'>
             $().ready(() => {
@@ -154,8 +221,21 @@
                     }))
                     .then(constructIcon)
                     .then(getBirdDataViaUrl);
+
+                // Scroll To Top Button
+                $('#menu-share').click(function topFunction() {
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                })
+
+                $('#submit').on('click', function (e) {
+                    e.preventDefault();
+                    $('#questionBox').modal('hide');
+                    $('#submitted').modal('show');
+                })
+
                 // For new element generated after the page loaded, you have to select its parent for adding event handler       
-                // Click icon to trigger modal
+                // Click icon to trigger data modal
                 $("#birds-icons-container").click(".icons-img", function (e) {
                     console.log(e.target.id);
                     constructBirdData(e.target.id);
@@ -246,16 +326,14 @@
                     itemPrice.innerHTML = `Price: $${item.price}`;
                     let itemsContainer = $(".shopping-cart-list");
 
-
                     if (checkDuplicate(itemBody.id)) {
                         alert("Item already added to cart!")
                     } else {
-
                         $(".shopping-cart-list-item-none").css('display', 'none');
                         itemsContainer.append(itemTemplate.html());
                     }
                 }
-
+                // check duplicate cart item
                 function checkDuplicate(itemId) {
                     let itemsContainer = $(".shopping-cart-list");
                     checkingArr = itemsContainer[0].children;
