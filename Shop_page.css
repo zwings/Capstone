@@ -27,22 +27,22 @@
 } */
 .bird-data-modal-body{
     padding:0px;
-    width: 80vw;
+    width: 60vw;
 }
 
 .bird-data-modal-content{
-    width: 80vw;
+    width: 60vw;
     margin-left: auto;
     margin-right: auto;
 }
 
 .bird-data-modal-image{
-    width:79.8vw;
+    width:59.8vw;
     
 }
 
 .bird-data-modal-footer{
-    width: 80vw;
+    width: 60vw;
     
 }
 
@@ -70,3 +70,12 @@ span.bird-data-add-to-cart-text{
     font-size:30;
 }
 
+.shopping-cart-list-item-icon{
+    height:100px;
+    width:100px;
+    display:inline-block;
+}
+
+.shopping-cart-list-item-body{
+    display: block;
+}

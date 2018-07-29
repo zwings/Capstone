@@ -22,23 +22,24 @@
     <div style="display: none;">
         <div id="bird-data-template" class="modal-dialog">
             <!-- bird-dta-card content-->
-            <!--Warning never mess up with the fucking bootstrap class!!!!-->
+            <!--Warning:never mess up with the fucking bootstrap class!!!!-->
             <div class="bird-data-modal-content modal-content">
                 <div class="bird-data-modal-header modal-header">
                     <span type="button" class="close" data-dismiss="modal">&times;</span>
                     <div class="bird-data-type">Lovebird</div>
                 </div>
-                <div class="bird-data-modal-body modal-body">   
+                <div class="bird-data-modal-body modal-body">
                     <img class="bird-data-modal-image" src="background:url('')">
                 </div>
                 <div class="bird-data-modal-footer modal-footer">
                     <div class="bird-data-descripiton">
                         <p class="bird-data-properties">Lovebird is a small size bird, with green color feather, and it's 2 years old now.</p>
                         <span>
-                        <i class="fas fa-tag fa-2x"></i>
-                        <span class="bird-data-price">Price:$100</span>
+                            <i class="fas fa-tag fa-2x"></i>
+                            <span class="bird-data-price">Price:$100</span>
                         </span>
                         <br/>
+                        <!-- Add-to-cart button -->
                         <button class="bird-data-add-to-cart">
                             <span>
                                 <i class="fas fa-cart-plus fa-2x"></i>
@@ -50,34 +51,21 @@
             </div>
         </div>
     </div>
-    <!-- Shopping cart modal template -->
+    <!-- Shopping cart list item template -->
     <div style="display: none;">
-        <div id="shopping-cart-template" class="modal-dialog">
-            s<!-- Shopping cart modal content-->
-            <div class="shopping-cart-modal-content modal-content">
-                <div class="shopping-cart-modal-header modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">
-                        <i class="fas fa-crow fa-2x"></i>
-                        <span>Shopping cart</span
-                    ></h4>
-                </div>
-                <div class="shopping-cart-modal-body modal-body">
-                    <ul>
-                        <li>"You haven't added any item yet"</li>
-                    </ul>
-                        
-                    
-                </div>
-                <div class=" shopping-cart-modal-footer modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Check out</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-    
+        <div class="shopping-cart-list-item-template">
+            <span class="shopping-cart-list-item-body">
+            <img class="shopping-cart-list-item-icon" scr="">
+            <span class="shopping-cart-list-item-name"></span>
+            <span class="shopping-cart-list-item-price"></span>
+            <!--I need to add a event hanlder and funcinton for remove button-->
+            <i class="shopping-cart-list-item-remove-button fas fa-minus-square"></i>
+            </span>
         </div>
     </div>
-
+    
+    <!--Shopping cart button-->
+    <i class="icon fas fa-shopping-cart fa-3x " data-toggle="modal" data-target="#shopping-cart-container"></i>
     <!--Bird icons container-->
     <div id="birds-icons-container" class="row">
     </div>
@@ -86,120 +74,145 @@
     </div>
     <!--Shopping cart modal container-->
     <div id="shopping-cart-container" class="modal fade" role="dialog">
-    </div>
+        <div id="shopping-cart" class="modal-dialog">
+            <!-- Shopping cart modal content-->
+            <div class="shopping-cart-modal-content modal-content">
+                <div class="shopping-cart-modal-header modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="shopping-car-modal-title modal-title">
+                        <i class="fas fa-crow fa-2x"></i>
+                        <span>Shopping cart</span>
+                    </h4>
+                </div>
+                <div class="shopping-cart-modal-body modal-body">
+                    <ul class="shopping-cart-list">
+                        <li class="shopping-cart-list-item-none">"You haven't added any item yet"</li>
+                    </ul>
+                </div>
+                <div class=" shopping-cart-modal-footer modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Check out</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
 
-    <script type='text/javascript'>
-        $().ready(()=>{
-        // Set up api call.
-        let cdaClient = contentful.createClient({
-            space: "bqnchs7z0iy5",
-            accessToken: "c0685fb14294207d1308e272df9fe0da5d6651c2efec7a4ee2c519f310ddb1d2"
-        });
-        var birdsArr = [];
-        // Get all the entires of content-type from server.
-        cdaClient.getEntries({ content_type: "birdType" })
-            .then((result) => result.items)
-            .then((items) => items.map((item) => item.fields))
-            .then((output) => output.map((item) => {
-                return { ...item, photo: item.photo.fields.file.url }
-            }))
-            .then((items) => items.forEach((item) => {
-                birdsArr.push({ ...item, id: birdsArr.length })
-            }))
-            .then(constructIcon)
-            .then(getBirdDataViaUrl);
-        // Append the data retrived from Contentful to HTML. 
-        function constructIcon() {
-            birdsArr.forEach((e) => {
-                let iconTemplate = $('#birds-icons-template').clone();
-                let iconContainer = iconTemplate[0].children;
-                iconContainer[0].innerHTML = `<img id="${e.id}"class="birds-icons-img" src="http:${e.photo}">`;
-                let iconsContainer = $("#birds-icons-container");
-                iconsContainer.append(iconTemplate.html());
-            });
-        }
-        // Event handler
-        $("#birds-icons-container").click(".icons-img", function (e) {
-            console.log(e.target.id);
-            constructBirdData(e.target.id);
-        });
-        // For new element generated after the page loaded, you have to select its parent for adding event handler
-        $("#bird-data-container").on('hidden.bs.modal', function (e) {
-            e.target.innerHTML = "";
-        });
-        $('#bird-data-container').click('.add-to-cart',function(e){
-            console.log('added');
-            console.log(e.target.id);
-        });
-        
-        // Get corresponding Bird ID from URL
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
-
-        // Create a sudo event to trigger modal via URL
-        function getBirdDataViaUrl () {
-            console.log("I'm running")
-            var birdId = getParameterByName('birdId');
-            if (!!birdId){
-                $("#birds-icons-container").children().eq(Number(birdId)).children().eq(0).click()
+        <script type='text/javascript'>
+            $().ready(() => {
+                // Set up api call.
+                let cdaClient = contentful.createClient({
+                    space: "bqnchs7z0iy5",
+                    accessToken: "c0685fb14294207d1308e272df9fe0da5d6651c2efec7a4ee2c519f310ddb1d2"
+                });
+                var birdsArr = [];
+                // Get all the entires of content-type from server.
+                cdaClient.getEntries({ content_type: "birdType" })
+                    .then((result) => result.items)
+                    .then((result) => {console.log(result);return result})
+                    .then((items) => items.map((item) => item.fields))
+                    .then((output) => output.map((item) => {
+                        return { ...item, photo: item.photo.fields.file.url }
+                    }))
+                    .then((output) => output.map((item) => {
+                        return {...item, icon: item.icon.fields.file.url}
+                    }))
+                    .then((items) => items.forEach((item) => {
+                        birdsArr.push({ ...item, id: birdsArr.length })
+                    }))
+                    .then(constructIcon)
+                    .then(getBirdDataViaUrl);
+                // For new element generated after the page loaded, you have to select its parent for adding event handler       
+                // Click icon to trigger modal
+                $("#birds-icons-container").click(".icons-img", function (e) {
+                    console.log(e.target.id);
+                    constructBirdData(e.target.id);
+                });
+                // Erase the data of modal while closed
+                $("#bird-data-container").on('hidden.bs.modal', function (e) {
+                    e.target.innerHTML = "";
+                });
+                // Click add-to-cart button 
+                $('#bird-data-container').on('click','.bird-data-add-to-cart', function (e) {
+                    console.log('added');
+                    console.log(e.target.id);
+                    constructShoppingCartItem(e.target.id);
+                });
+                //Click remove button
+                $('#shopping-cart-container').on('click','.shopping-cart-list-item-remove-button',function(e){
+                    $(e.target).parent().remove();
+                    console.log(document.getElementsByClassName('shopping-cart-list')[0].children.length)
+                    if (document.getElementsByClassName('shopping-cart-list')[0].children.length === 1){
+                        $(".shopping-cart-list-item-none").css('display','block');
+                    }
+                })
+                // Get corresponding Bird ID from URL
+                function getParameterByName(name, url) {
+                    if (!url) url = window.location.href;
+                    name = name.replace(/[\[\]]/g, '\\$&');
+                    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                        results = regex.exec(url);
+                    if (!results) return null;
+                    if (!results[2]) return '';
+                    return decodeURIComponent(results[2].replace(/\+/g, ' '));
                 }
-        };
-       
-        function constructBirdData(targetId) {
-            data = birdsArr[Number(targetId)];
-            // console.log(data);
-
-            let dataTemplate = $("#bird-data-template").clone();
-            // console.log(dataTemplate);
-
-            let dataHeader = dataTemplate[0].getElementsByClassName("bird-data-modal-header")[0];
-            // console.log(dataHeader);
-
-            let type = dataHeader.children[1];
-            type.innerHTML = `${data.type}`;
-            // console.log(type);
-
-            let dataBody = dataTemplate[0].getElementsByClassName("bird-data-modal-body")[0];
-            // console.log(dataBody);
-
-            let image = dataBody.children[0];
-            image.src = `http:${data.photo}`;
-            // console.log(image);
-            
-            let dataFooter = dataTemplate[0].getElementsByClassName("bird-data-modal-footer")[0];
-            // console.log(dataFooter);
-
-            let descripiton = dataFooter.children[0];
-            console.log(descripiton);
-
-            let properties = descripiton.children[0];
-            let price = descripiton.children[1].children[1];
-            properties.innerHTML = `${data.type} is a ${data.size} size bird, with ${data.color} color feather, and it's ${data.age} years old now.`;
-            price.innerHTML = `$${data.price}`; 
-            let button = descripiton.children[3];
-            button.id = data.id;
-            console.log(`I am id ${button.id}`);
-
-        
-            // console.log(properties);
-            // console.log(price);
-
-            let dataContainer = $("#bird-data-container");
-            dataContainer.append(dataTemplate.html());
-            $('#bird-data-container').modal('show');
-        };
-
-        });
-
-
-    </script>
+                // Create a sudo event to trigger modal via URL
+                function getBirdDataViaUrl() {
+                    console.log("I'm running")
+                    var birdId = getParameterByName('birdId');
+                    if (!!birdId) {
+                        $("#birds-icons-container").children().eq(Number(birdId)).children().eq(0).click()
+                    }
+                };
+                // Create icons by API data. 
+                function constructIcon() {
+                    birdsArr.forEach((e) => {
+                        let iconTemplate = $('#birds-icons-template').clone();
+                        let iconContainer = iconTemplate[0].children;
+                        iconContainer[0].innerHTML = `<img id="${e.id}"class="birds-icons-img" src="http:${e.icon}">`;
+                        let iconsContainer = $("#birds-icons-container");
+                        iconsContainer.append(iconTemplate.html());
+                    });
+                }
+                // Create a modal by API data
+                function constructBirdData(targetId) {
+                    data = birdsArr[Number(targetId)];
+                    let dataTemplate = $("#bird-data-template").clone();
+                    let dataHeader = dataTemplate[0].getElementsByClassName("bird-data-modal-header")[0];
+                    let type = dataHeader.children[1];
+                    type.innerHTML = `${data.type}`;
+                    let dataBody = dataTemplate[0].getElementsByClassName("bird-data-modal-body")[0];
+                    let image = dataBody.children[0];
+                    image.src = `http:${data.photo}`;
+                    let dataFooter = dataTemplate[0].getElementsByClassName("bird-data-modal-footer")[0];
+                    let descripiton = dataFooter.children[0];
+                    let properties = descripiton.children[0];
+                    let price = descripiton.children[1].children[1];
+                    properties.innerHTML = `${data.type} is a ${data.size} size bird, with ${data.color} color feather, and it's ${data.age} years old now.`;
+                    price.innerHTML = `$${data.price}`;
+                    let button = descripiton.children[3];
+                    button.id = data.id;
+                    console.log(`I am id ${button.id}`);
+                    let dataContainer = $("#bird-data-container");
+                    dataContainer.append(dataTemplate.html());
+                    $('#bird-data-container').modal('show');
+                };
+                // Create a item by API data
+                function constructShoppingCartItem(targetId){
+                    item = birdsArr[Number(targetId)];
+                    
+                    let itemTemplate = $(".shopping-cart-list-item-template").clone();
+                    let itemBody = itemTemplate[0].getElementsByClassName("shopping-cart-list-item-body")[0];
+                    let itemIcon = itemBody.children[0];
+                    let itemName = itemBody.children[1];
+                    let itemPrice = itemBody.children[2];
+                    itemIcon.src = `http:${item.icon}`;
+                    itemName.innerHTML = `Type: ${item.type}`;
+                    itemPrice.innerHTML = `Price: $${item.price}`;
+                    let itemsContainer = $(".shopping-cart-list");
+                    $(".shopping-cart-list-item-none").css('display','none');
+                    itemsContainer.append(itemTemplate.html());
+                }
+            });
+        </script>
 </body>
 
 
