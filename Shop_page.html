@@ -236,7 +236,7 @@
 
                 // For new element generated after the page loaded, you have to select its parent for adding event handler       
                 // Click icon to trigger data modal
-                $("#birds-icons-container").click(".icons-img", function (e) {
+                $("#birds-icons-container").on("click",".birds-icons-img", function (e) {
                     console.log(e.target.id);
                     constructBirdData(e.target.id);
                 });
