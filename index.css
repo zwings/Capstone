@@ -107,6 +107,12 @@
     font-size: 28px;
     color:white;
     padding-left:10px;
+    text-decoration: none;
+}
+
+.more:hover {
+    text-decoration: none;
+    color:white;
 }
 
 .header-content {
